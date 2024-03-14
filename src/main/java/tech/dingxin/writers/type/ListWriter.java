@@ -1,10 +1,10 @@
 package tech.dingxin.writers.type;
 
-import java.util.List;
-
 import org.apache.arrow.vector.complex.ListVector;
-import tech.dingxin.common.ArrowFieldWriter;
-import tech.dingxin.common.Preconditions;
+import tech.dingxin.writers.ArrowFieldWriter;
+import tech.dingxin.utils.Preconditions;
+
+import java.util.List;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
@@ -18,13 +18,13 @@ public class ListWriter extends ArrowFieldWriter<List> {
     }
 
     @Override
-    public void doWrite(List row, int ordinal) {
+    public void doWrite(List row) {
         if (row != null) {
-            ((ListVector)getValueVector()).startNewValue(getCount());
-            for (int i = 0; i < row.size(); i++) {
-                elementWriter.write(row.get(i), i);
+            ((ListVector) getValueVector()).startNewValue(getCount());
+            for (Object o : row) {
+                elementWriter.write(o);
             }
-            ((ListVector)getValueVector()).endValue(getCount(), row.size());
+            ((ListVector) getValueVector()).endValue(getCount(), row.size());
         }
     }
 

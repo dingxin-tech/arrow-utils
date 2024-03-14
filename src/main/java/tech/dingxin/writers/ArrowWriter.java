@@ -18,14 +18,12 @@
 
 package tech.dingxin.writers;
 
-import java.util.Arrays;
+import org.apache.arrow.vector.VectorSchemaRoot;
+import tech.dingxin.utils.Preconditions;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.apache.arrow.vector.VectorSchemaRoot;
-import tech.dingxin.common.ArrowFieldWriter;
-import tech.dingxin.common.Preconditions;
 
 /**
  * Writer which serializes the Flink rows to Arrow format.
@@ -46,15 +44,13 @@ public class ArrowWriter<IN> {
 
     private boolean isClosed;
 
-    private long cachedCount;
 
     public ArrowWriter(VectorSchemaRoot root, ArrowFieldWriter<IN>[] fieldWriters) {
         this.root = Preconditions.checkNotNull(root);
         Preconditions.checkNotNull(fieldWriters);
         this.fieldWriters = Arrays.stream(fieldWriters).collect(
-            Collectors.toMap(o -> o.getValueVector().getName(), o -> o));
+                Collectors.toMap(o -> o.getValueVector().getName(), o -> o));
         this.isClosed = false;
-        this.cachedCount = 0;
     }
 
     /**
@@ -62,15 +58,13 @@ public class ArrowWriter<IN> {
      */
     public void write(IN row, String fieldName) {
         ArrowFieldWriter<IN> fieldWriter = fieldWriters.get(fieldName);
-        fieldWriter.write(row, 0);
-        cachedCount++;
+        fieldWriter.write(row);
     }
 
     /**
      * Finishes the writing of the current row batch.
      */
     public void finish() {
-        root.setRowCount((int)cachedCount);
         for (ArrowFieldWriter<IN> fieldWriter : fieldWriters.values()) {
             fieldWriter.finish();
         }
@@ -84,7 +78,6 @@ public class ArrowWriter<IN> {
         for (ArrowFieldWriter fieldWriter : fieldWriters.values()) {
             fieldWriter.reset();
         }
-        cachedCount = 0;
     }
 
     public void close() {
@@ -96,9 +89,5 @@ public class ArrowWriter<IN> {
 
     public VectorSchemaRoot getRecordBatch() {
         return root;
-    }
-
-    public long getCachedCount() {
-        return cachedCount;
     }
 }

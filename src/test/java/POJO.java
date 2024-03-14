@@ -14,16 +14,28 @@ public class POJO {
     private List<List<String>> mapList;
     private Inner inner;
 
-    public static class Inner {
-        String innerString;
+    public static POJO getSampleInstance() {
+        POJO pojo = new POJO();
+        pojo.setString("name");
 
-        public String getInnerString() {
-            return innerString;
-        }
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+        map.put("key2", "value2");
+        pojo.setMap(map);
 
-        public void setInnerString(String innerString) {
-            this.innerString = innerString;
-        }
+        List<String> list = new ArrayList<>();
+        list.add("happy");
+        list.add(null);
+        pojo.setList(list);
+
+        List<List<String>> list1 = Arrays.asList(list, new ArrayList<String>());
+        pojo.setMapList(list1);
+
+        Inner inner = new Inner();
+        inner.setInnerString("innerString");
+        pojo.setInner(inner);
+
+        return pojo;
     }
 
     public String getString() {
@@ -66,27 +78,15 @@ public class POJO {
         this.inner = inner;
     }
 
-    public static POJO getSampleInstance() {
-        POJO pojo = new POJO();
-        pojo.setString("name");
+    public static class Inner {
+        String innerString;
 
-        Map<String, String> map = new HashMap<>();
-        map.put("key", "value");
-        map.put("key2", "value2");
-        pojo.setMap(map);
+        public String getInnerString() {
+            return innerString;
+        }
 
-        List<String> list = new ArrayList<>();
-        list.add("happy");
-        list.add(null);
-        pojo.setList(list);
-
-        List<List<String>> list1 = Arrays.asList(list, new ArrayList<String>());
-        pojo.setMapList(list1);
-
-        Inner inner = new Inner();
-        inner.setInnerString("innerString");
-        pojo.setInner(inner);
-
-        return pojo;
+        public void setInnerString(String innerString) {
+            this.innerString = innerString;
+        }
     }
 }

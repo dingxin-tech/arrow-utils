@@ -1,4 +1,4 @@
-package tech.dingxin.common;
+package tech.dingxin.utils;
 
 import javax.annotation.Nullable;
 

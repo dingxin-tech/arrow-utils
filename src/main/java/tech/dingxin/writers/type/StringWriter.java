@@ -1,10 +1,10 @@
 package tech.dingxin.writers.type;
 
-import java.nio.charset.StandardCharsets;
-
 import org.apache.arrow.vector.ValueVector;
 import org.apache.arrow.vector.VarCharVector;
-import tech.dingxin.common.ArrowFieldWriter;
+import tech.dingxin.writers.ArrowFieldWriter;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
@@ -16,11 +16,11 @@ public class StringWriter extends ArrowFieldWriter<String> {
     }
 
     @Override
-    public void doWrite(String row, int ordinal) {
+    public void doWrite(String row) {
         if (row == null) {
-            ((VarCharVector)getValueVector()).setNull(getCount());
+            ((VarCharVector) getValueVector()).setNull(getCount());
         } else {
-            ((VarCharVector)getValueVector()).setSafe(getCount(), row.getBytes(StandardCharsets.UTF_8));
+            ((VarCharVector) getValueVector()).setSafe(getCount(), row.getBytes(StandardCharsets.UTF_8));
         }
     }
 }

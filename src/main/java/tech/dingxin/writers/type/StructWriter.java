@@ -1,13 +1,13 @@
 package tech.dingxin.writers.type;
 
+import org.apache.arrow.vector.ValueVector;
+import org.apache.arrow.vector.complex.StructVector;
+import tech.dingxin.writers.ArrowFieldWriter;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.arrow.vector.ValueVector;
-import org.apache.arrow.vector.complex.StructVector;
-import tech.dingxin.common.ArrowFieldWriter;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
@@ -22,17 +22,17 @@ public class StructWriter extends ArrowFieldWriter<Object> {
     }
 
     @Override
-    public void doWrite(Object row, int ordinal) {
+    public void doWrite(Object row) {
         if (row == null) {
-            ((StructVector)getValueVector()).setNull(getCount());
+            ((StructVector) getValueVector()).setNull(getCount());
             for (ArrowFieldWriter writer : childWriters) {
-                writer.write(null, ordinal);
+                writer.write(null);
             }
         } else {
             if (getterCache.isEmpty()) {
                 cacheGetterMethods(row.getClass());
             }
-            ((StructVector)getValueVector()).setIndexDefined(getCount());
+            ((StructVector) getValueVector()).setIndexDefined(getCount());
             for (ArrowFieldWriter writer : childWriters) {
                 String fieldName = writer.getValueVector().getName();
                 Method getMethod = getterCache.get(fieldName);
@@ -42,7 +42,7 @@ public class StructWriter extends ArrowFieldWriter<Object> {
                 } catch (Exception e) {
                     throw new RuntimeException(getMethod.getName() + " invoke error");
                 }
-                writer.write(value, ordinal);
+                writer.write(value);
             }
         }
     }
@@ -61,7 +61,7 @@ public class StructWriter extends ArrowFieldWriter<Object> {
                 // 如果没有找到 get 方法，且字段是 boolean 类型，尝试 is 方法
                 if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
                     String booleanGetterName = "is" + field.getName().substring(0, 1).toUpperCase() + field.getName()
-                        .substring(1);
+                            .substring(1);
                     try {
                         Method booleanGetter = clazz.getMethod(booleanGetterName);
                         getterCache.put(field.getName(), booleanGetter);

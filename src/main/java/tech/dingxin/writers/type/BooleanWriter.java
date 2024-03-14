@@ -2,7 +2,7 @@ package tech.dingxin.writers.type;
 
 import org.apache.arrow.vector.BitVector;
 import org.apache.arrow.vector.ValueVector;
-import tech.dingxin.common.ArrowFieldWriter;
+import tech.dingxin.writers.ArrowFieldWriter;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
@@ -14,11 +14,11 @@ public class BooleanWriter extends ArrowFieldWriter<Boolean> {
     }
 
     @Override
-    public void doWrite(Boolean row, int ordinal) {
+    public void doWrite(Boolean row) {
         if (row == null) {
-            ((BitVector)getValueVector()).setNull(getCount());
+            ((BitVector) getValueVector()).setNull(getCount());
         } else {
-            ((BitVector)getValueVector()).setSafe(getCount(), row ? 1 : 0);
+            ((BitVector) getValueVector()).setSafe(getCount(), row ? 1 : 0);
         }
     }
 }

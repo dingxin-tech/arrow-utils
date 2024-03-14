@@ -19,5 +19,12 @@ public class POJO2ArrowConverterTest {
         pojo2ArrowConverter.write(pojo);
         VectorSchemaRoot arrowBatch2 = pojo2ArrowConverter.getArrowBatch();
         System.out.println(arrowBatch2.contentToTSVString());
+
+        pojo2ArrowConverter.reset();
+        pojo2ArrowConverter.write(pojo);
+        pojo2ArrowConverter.write(pojo);
+        pojo2ArrowConverter.write(pojo);
+        VectorSchemaRoot arrowBatch3 = pojo2ArrowConverter.getArrowBatch();
+        System.out.println(arrowBatch3.contentToTSVString());
     }
 }

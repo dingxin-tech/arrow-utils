@@ -2,7 +2,7 @@ package tech.dingxin.writers.type;
 
 import org.apache.arrow.vector.SmallIntVector;
 import org.apache.arrow.vector.ValueVector;
-import tech.dingxin.common.ArrowFieldWriter;
+import tech.dingxin.writers.ArrowFieldWriter;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
@@ -14,11 +14,11 @@ public class ShortWriter extends ArrowFieldWriter<Short> {
     }
 
     @Override
-    public void doWrite(Short row, int ordinal) {
+    public void doWrite(Short row) {
         if (row == null) {
-            ((SmallIntVector)getValueVector()).setNull(getCount());
+            ((SmallIntVector) getValueVector()).setNull(getCount());
         } else {
-            ((SmallIntVector)getValueVector()).setSafe(getCount(), row);
+            ((SmallIntVector) getValueVector()).setSafe(getCount(), row);
         }
     }
 }
