@@ -1,5 +1,4 @@
 # Arrow Utils
-[中文版本](README.md)
 Arrow Utils is an open-source utility library that offers convenient ways to convert various data types into the Apache Arrow format. This project aims to simplify data format conversion involved in data processing, transfer, and storage procedures implemented in Java. Whether the data originates from plain Java POJOs, JDBC-acquired datasets, or other data structures, Arrow Utils helps you to effortlessly convert them into the high-performance Apache Arrow data format.
 
 ## Features
