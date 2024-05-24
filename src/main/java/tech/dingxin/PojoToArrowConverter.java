@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
  */
-public class POJO2ArrowConverter {
+public class PojoToArrowConverter {
 
     private final Class clazz;
     private final Schema schema;
@@ -35,7 +35,7 @@ public class POJO2ArrowConverter {
     private BufferAllocator allocator;
     private int cacheCount = 0;
 
-    public POJO2ArrowConverter(Class pojo, BufferAllocator allocator) {
+    public PojoToArrowConverter(Class pojo, BufferAllocator allocator) {
         this.clazz = pojo;
         this.schema = getSchema(pojo.getDeclaredFields());
         if (allocator == null) {
@@ -45,7 +45,7 @@ public class POJO2ArrowConverter {
         cacheGetterMethods();
     }
 
-    private static org.apache.arrow.vector.types.pojo.Field toArrowField(String fieldName,
+    public static org.apache.arrow.vector.types.pojo.Field toArrowField(String fieldName,
                                                                          Class<?> type,
                                                                          Type genericType,
                                                                          boolean nullable) {
@@ -239,7 +239,7 @@ public class POJO2ArrowConverter {
         return cacheCount;
     }
 
-    private Schema getSchema(Field[] fields) {
+    public static Schema getSchema(Field[] fields) {
         List<org.apache.arrow.vector.types.pojo.Field> fieldList = new ArrayList<>();
         for (Field pojoField : fields) {
             pojoField.setAccessible(true);
