@@ -6,7 +6,7 @@
 
     <groupId>tech.dingxin</groupId>
     <artifactId>arrow-utils</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <url>https://github.com/dingxin-tech/arrow-utils</url>
     <description>An open-source utility library that offers convenient ways to convert various data types into the Apache Arrow format.</description>
 

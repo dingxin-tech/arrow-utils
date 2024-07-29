@@ -19,11 +19,14 @@ package tech.dingxin.writers;
 
 import org.apache.arrow.vector.BigIntVector;
 import org.apache.arrow.vector.BitVector;
+import org.apache.arrow.vector.DateDayVector;
+import org.apache.arrow.vector.DateMilliVector;
 import org.apache.arrow.vector.FieldVector;
 import org.apache.arrow.vector.Float4Vector;
 import org.apache.arrow.vector.Float8Vector;
 import org.apache.arrow.vector.IntVector;
 import org.apache.arrow.vector.SmallIntVector;
+import org.apache.arrow.vector.TimeStampVector;
 import org.apache.arrow.vector.TinyIntVector;
 import org.apache.arrow.vector.ValueVector;
 import org.apache.arrow.vector.VarCharVector;
@@ -33,6 +36,8 @@ import org.apache.arrow.vector.complex.MapVector;
 import org.apache.arrow.vector.complex.StructVector;
 import tech.dingxin.writers.type.BooleanWriter;
 import tech.dingxin.writers.type.ByteWriter;
+import tech.dingxin.writers.type.DateWriter;
+import tech.dingxin.writers.type.DatetimeWriter;
 import tech.dingxin.writers.type.DoubleWriter;
 import tech.dingxin.writers.type.FloatWriter;
 import tech.dingxin.writers.type.IntegerWriter;
@@ -42,6 +47,7 @@ import tech.dingxin.writers.type.MapWriter;
 import tech.dingxin.writers.type.ShortWriter;
 import tech.dingxin.writers.type.StringWriter;
 import tech.dingxin.writers.type.StructWriter;
+import tech.dingxin.writers.type.TimestampWriter;
 
 import java.util.List;
 
@@ -69,6 +75,12 @@ public class ArrowWriterFactory {
             return new StringWriter(vector);
         } else if (vector instanceof IntVector) {
             return new IntegerWriter(vector);
+        } else if (vector instanceof DateDayVector) {
+            return new DateWriter(vector);
+        } else if (vector instanceof DateMilliVector) {
+            return new DatetimeWriter(vector);
+        } else if (vector instanceof TimeStampVector) {
+            return new TimestampWriter(vector);
         } else if (vector instanceof MapVector) {
             MapVector mapVector = (MapVector) vector;
             StructVector structVector = (StructVector) mapVector.getDataVector();
