@@ -21,22 +21,22 @@ import org.apache.arrow.vector.DateDayVector;
 import org.apache.arrow.vector.ValueVector;
 import tech.dingxin.writers.ArrowFieldWriter;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
  */
-public class DateWriter extends ArrowFieldWriter<LocalDate> {
+public class DateWriter extends ArrowFieldWriter<Date> {
     public DateWriter(ValueVector valueVector) {
         super(valueVector);
     }
 
     @Override
-    public void doWrite(LocalDate row) {
+    public void doWrite(Date row) {
         if (row == null) {
             ((DateDayVector) getValueVector()).setNull(getCount());
         } else {
-            ((DateDayVector) getValueVector()).setSafe(getCount(), (int) row.toEpochDay());
+            ((DateDayVector) getValueVector()).setSafe(getCount(), (int) row.toLocalDate().toEpochDay());
         }
     }
 }

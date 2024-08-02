@@ -79,6 +79,10 @@ public class ArrowWriter<IN> {
         }
     }
 
+
+    /**
+     * do not close the writer unless you don't need the batch data.
+     */
     public void close() {
         if (!isClosed) {
             root.close();

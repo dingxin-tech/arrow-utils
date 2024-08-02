@@ -17,27 +17,27 @@
 
 package tech.dingxin.writers.type;
 
-import org.apache.arrow.vector.DateMilliVector;
+import org.apache.arrow.vector.DecimalVector;
 import org.apache.arrow.vector.ValueVector;
 import tech.dingxin.writers.ArrowFieldWriter;
 
-import java.time.ZonedDateTime;
-import java.util.Date;
+import java.math.BigDecimal;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
  */
-public class DatetimeWriter extends ArrowFieldWriter<Date> {
-    public DatetimeWriter(ValueVector valueVector) {
+public class DecimalWriter extends ArrowFieldWriter<BigDecimal> {
+
+    public DecimalWriter(ValueVector valueVector) {
         super(valueVector);
     }
 
     @Override
-    public void doWrite(Date row) {
+    public void doWrite(BigDecimal row) {
         if (row == null) {
-            ((DateMilliVector) getValueVector()).setNull(getCount());
+            ((DecimalVector) getValueVector()).setNull(getCount());
         } else {
-            ((DateMilliVector) getValueVector()).setSafe(getCount(), row.toInstant().toEpochMilli());
+            ((DecimalVector) getValueVector()).setSafe(getCount(), row.setScale(((DecimalVector) getValueVector()).getScale()));
         }
     }
 }

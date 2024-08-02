@@ -17,27 +17,26 @@
 
 package tech.dingxin.writers.type;
 
-import org.apache.arrow.vector.DateMilliVector;
+import org.apache.arrow.vector.TinyIntVector;
 import org.apache.arrow.vector.ValueVector;
+import org.apache.arrow.vector.VarBinaryVector;
 import tech.dingxin.writers.ArrowFieldWriter;
-
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
  */
-public class DatetimeWriter extends ArrowFieldWriter<Date> {
-    public DatetimeWriter(ValueVector valueVector) {
+public class ByteArrayWriter extends ArrowFieldWriter<byte[]> {
+
+    public ByteArrayWriter(ValueVector valueVector) {
         super(valueVector);
     }
 
     @Override
-    public void doWrite(Date row) {
+    public void doWrite(byte[] row) {
         if (row == null) {
-            ((DateMilliVector) getValueVector()).setNull(getCount());
+            ((VarBinaryVector) getValueVector()).setNull(getCount());
         } else {
-            ((DateMilliVector) getValueVector()).setSafe(getCount(), row.toInstant().toEpochMilli());
+            ((VarBinaryVector) getValueVector()).setSafe(getCount(), row);
         }
     }
 }

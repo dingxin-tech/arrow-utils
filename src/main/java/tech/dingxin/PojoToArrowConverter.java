@@ -20,7 +20,9 @@ package tech.dingxin;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.VectorSchemaRoot;
+import org.apache.arrow.vector.types.DateUnit;
 import org.apache.arrow.vector.types.FloatingPointPrecision;
+import org.apache.arrow.vector.types.TimeUnit;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.ArrowType.Struct;
 import org.apache.arrow.vector.types.pojo.FieldType;
@@ -32,9 +34,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,9 +68,9 @@ public class PojoToArrowConverter {
     }
 
     public static org.apache.arrow.vector.types.pojo.Field toArrowField(String fieldName,
-                                                                         Class<?> type,
-                                                                         Type genericType,
-                                                                         boolean nullable) {
+                                                                        Class<?> type,
+                                                                        Type genericType,
+                                                                        boolean nullable) {
         // Returns the corresponding Arrow type based on the Java type
         if (type == int.class || type == Integer.class) {
             return new org.apache.arrow.vector.types.pojo.Field(fieldName, new FieldType(nullable,
@@ -111,6 +116,34 @@ public class PojoToArrowConverter {
         } else if (type == String.class) {
             return new org.apache.arrow.vector.types.pojo.Field(fieldName, new FieldType(nullable,
                     new ArrowType.Utf8(),
+                    null, null),
+                    null);
+        } else if (type == BigDecimal.class) {
+            return new org.apache.arrow.vector.types.pojo.Field(fieldName, new FieldType(nullable,
+                    new ArrowType.Decimal(
+                            38, 18),
+                    null, null),
+                    null);
+        } else if (type == byte[].class) {
+            return new org.apache.arrow.vector.types.pojo.Field(fieldName, new FieldType(nullable,
+                    new ArrowType.Binary(),
+                    null, null),
+                    null);
+        } else if (type == java.sql.Date.class) {
+            return new org.apache.arrow.vector.types.pojo.Field(fieldName, new FieldType(nullable,
+                    new ArrowType.Date(DateUnit.DAY),
+                    null, null),
+                    null);
+        } else if (type == Date.class) {
+            return new org.apache.arrow.vector.types.pojo.Field(fieldName, new FieldType(nullable,
+                    new ArrowType.Date(DateUnit.MILLISECOND),
+                    null, null),
+                    null);
+        } else if (type == Timestamp.class) {
+            return new org.apache.arrow.vector.types.pojo.Field(fieldName, new FieldType(nullable,
+                    new ArrowType.Timestamp(
+                            TimeUnit.MILLISECOND,
+                            "UTC"),
                     null, null),
                     null);
         } else if (List.class.isAssignableFrom(type)) {

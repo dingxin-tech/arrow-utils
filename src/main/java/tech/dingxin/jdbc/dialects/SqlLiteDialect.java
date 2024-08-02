@@ -62,7 +62,7 @@ public class SqlLiteDialect implements JdbcDialect {
         if ("DOUBLE".equals(typeName) || "DOUBLE PRECISION".equals(typeName)) {
             return new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE);
         }
-        if ("FLOAT".equals(typeName)) {
+        if ("FLOAT".equals(typeName) || "REAL".equals(typeName)) {
             return new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE);
         }
         if ("CHARACTER".equals(typeName) || "NCHAR".equals(typeName) || "NATIVE CHARACTER".equals(typeName) ||
@@ -70,7 +70,7 @@ public class SqlLiteDialect implements JdbcDialect {
             return new ArrowType.Utf8();
         }
         if ("VARCHAR".equals(typeName) || "VARYING CHARACTER".equals(typeName) ||
-                "NVARCHAR".equals(typeName) || "TEXT".equals(typeName)) {
+                "NVARCHAR".equals(typeName) || "TEXT".equals(typeName) || "STRING".equals(typeName)) {
             return new ArrowType.Utf8();
         }
 

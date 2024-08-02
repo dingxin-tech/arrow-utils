@@ -18,48 +18,49 @@
 package tech.dingxin.writers.type;
 
 import org.apache.arrow.vector.DateMilliVector;
+import org.apache.arrow.vector.TimeStampMicroTZVector;
 import org.apache.arrow.vector.TimeStampMicroVector;
+import org.apache.arrow.vector.TimeStampMilliTZVector;
 import org.apache.arrow.vector.TimeStampMilliVector;
-import org.apache.arrow.vector.TimeStampNanoVector;
+import org.apache.arrow.vector.TimeStampSecTZVector;
 import org.apache.arrow.vector.TimeStampSecVector;
 import org.apache.arrow.vector.TimeStampVector;
 import org.apache.arrow.vector.ValueVector;
 import tech.dingxin.writers.ArrowFieldWriter;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 /**
  * @author dingxin (zhangdingxin.zdx@alibaba-inc.com)
  */
-public class TimestampWriter extends ArrowFieldWriter<Instant> {
+public class TimestampWriter extends ArrowFieldWriter<Timestamp> {
     public TimestampWriter(ValueVector valueVector) {
         super(valueVector);
     }
 
     @Override
-    public void doWrite(Instant row) {
+    public void doWrite(Timestamp row) {
         if (row == null) {
             ((DateMilliVector) getValueVector()).setNull(getCount());
         } else {
             TimeStampVector valueVector = (TimeStampVector) getValueVector();
-            if (valueVector instanceof TimeStampSecVector) {
+            if (valueVector instanceof TimeStampSecVector || valueVector instanceof TimeStampSecTZVector) {
                 ((TimeStampSecVector) valueVector)
-                        .setSafe(getCount(), row.getEpochSecond());
-            } else if (valueVector instanceof TimeStampMilliVector) {
-                ((TimeStampMilliVector) valueVector)
-                        .setSafe(getCount(), row.toEpochMilli());
-            } else if (valueVector instanceof TimeStampMicroVector) {
-                ((TimeStampMicroVector) valueVector)
+                        .setSafe(getCount(), row.getTime() / 1000);
+            } else if (valueVector instanceof TimeStampMilliVector || valueVector instanceof TimeStampMilliTZVector) {
+                valueVector
+                        .setSafe(getCount(), row.getTime());
+            } else if (valueVector instanceof TimeStampMicroVector || valueVector instanceof TimeStampMicroTZVector) {
+                valueVector
                         .setSafe(
                                 getCount(),
-                                row.getEpochSecond() * 1000
-                                        + row.getNano() / 1000);
+                                row.getTime() * 1_000 +
+                                        row.getNanos() / 1_000);
             } else {
-                ((TimeStampNanoVector) valueVector)
-                        .setSafe(
-                                getCount(),
-                                row.getEpochSecond() * 1_000_000
-                                        + row.getNano());
+                valueVector.setSafe(
+                        getCount(),
+                        row.getTime() * 1_000_000
+                                + row.getNanos());
             }
         }
     }

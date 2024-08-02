@@ -21,6 +21,7 @@ import org.apache.arrow.vector.BigIntVector;
 import org.apache.arrow.vector.BitVector;
 import org.apache.arrow.vector.DateDayVector;
 import org.apache.arrow.vector.DateMilliVector;
+import org.apache.arrow.vector.DecimalVector;
 import org.apache.arrow.vector.FieldVector;
 import org.apache.arrow.vector.Float4Vector;
 import org.apache.arrow.vector.Float8Vector;
@@ -29,15 +30,18 @@ import org.apache.arrow.vector.SmallIntVector;
 import org.apache.arrow.vector.TimeStampVector;
 import org.apache.arrow.vector.TinyIntVector;
 import org.apache.arrow.vector.ValueVector;
+import org.apache.arrow.vector.VarBinaryVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.complex.ListVector;
 import org.apache.arrow.vector.complex.MapVector;
 import org.apache.arrow.vector.complex.StructVector;
 import tech.dingxin.writers.type.BooleanWriter;
+import tech.dingxin.writers.type.ByteArrayWriter;
 import tech.dingxin.writers.type.ByteWriter;
 import tech.dingxin.writers.type.DateWriter;
 import tech.dingxin.writers.type.DatetimeWriter;
+import tech.dingxin.writers.type.DecimalWriter;
 import tech.dingxin.writers.type.DoubleWriter;
 import tech.dingxin.writers.type.FloatWriter;
 import tech.dingxin.writers.type.IntegerWriter;
@@ -81,6 +85,10 @@ public class ArrowWriterFactory {
             return new DatetimeWriter(vector);
         } else if (vector instanceof TimeStampVector) {
             return new TimestampWriter(vector);
+        } else if (vector instanceof VarBinaryVector) {
+            return new ByteArrayWriter(vector);
+        } else if (vector instanceof DecimalVector) {
+            return new DecimalWriter(vector);
         } else if (vector instanceof MapVector) {
             MapVector mapVector = (MapVector) vector;
             StructVector structVector = (StructVector) mapVector.getDataVector();
