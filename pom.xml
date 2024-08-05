@@ -93,6 +93,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <!-- https://github.com/actions/setup-java/issues/554-->
                         <version>1.6</version>
                         <executions>
                             <execution>
