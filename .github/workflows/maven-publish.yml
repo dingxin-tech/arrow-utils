@@ -28,7 +28,6 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          echo "$GPG_PASSPHRASE" | gpg --pinentry-mode loopback --passphrase-fd 0 --batch --import
 
       - name: Set up Maven
         uses: actions/setup-java@v2
@@ -40,4 +39,4 @@ jobs:
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        run: mvn deploy -s .github/maven-settings.xml
+        run: mvn deploy -Prelease -s .github/maven-settings.xml --batch-mode
