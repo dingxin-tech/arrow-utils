@@ -19,7 +19,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
+        distribution: 'temurin'
+        java-version: '8'
 
       - name: Import GPG key
         env:
